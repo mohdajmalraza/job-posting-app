@@ -36,8 +36,8 @@ function HomaPage() {
 
           {loading && (
             <div className="py-5 text-center">
-              <div class="spinner-border text-dark" role="status">
-                <span class="visually-hidden">Loading...</span>
+              <div className="spinner-border text-dark" role="status">
+                <span className="visually-hidden">Loading...</span>
               </div>
             </div>
           )}
