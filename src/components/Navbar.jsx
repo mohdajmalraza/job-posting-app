@@ -1,6 +1,19 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import useJobContext from "../contexts/JobContext";
 
 function Navbar() {
+  const { searchJobs } = useJobContext();
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    await searchJobs(searchQuery);
+
+    navigate(`/search?query=${searchQuery}`);
+  };
+
   return (
     <header>
       <nav
@@ -36,14 +49,20 @@ function Navbar() {
                 </NavLink>
               </li>
             </ul>
-            <form className="col-6 d-flex" role="search">
+            <form className="w-75 col-6 d-flex" role="search">
               <input
                 className="form-control me-2"
                 type="search"
                 placeholder="Search by job title..."
                 aria-label="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button className="btn btn-outline-success" type="submit">
+              <button
+                className="btn btn-outline-success"
+                type="submit"
+                onClick={handleSearch}
+              >
                 Search
               </button>
             </form>

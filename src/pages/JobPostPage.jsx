@@ -1,14 +1,15 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function JobPostPage() {
   const [formData, setFormData] = useState({
     title: "",
-    companyName: "",
+    company: "",
     location: "",
     salary: "",
-    jobType: "",
+    type: "",
     description: "",
     qualifications: "",
   });
@@ -30,10 +31,10 @@ function JobPostPage() {
 
     const {
       title,
-      companyName,
+      company,
       location,
       salary,
-      jobType,
+      type,
       description,
       qualifications,
     } = formData;
@@ -42,7 +43,7 @@ function JobPostPage() {
       return setError("Title is required");
     }
 
-    if (!companyName) {
+    if (!company) {
       return setError("Company name is required");
     }
 
@@ -54,7 +55,7 @@ function JobPostPage() {
       return setError("Salary is required");
     }
 
-    if (!jobType) {
+    if (!type) {
       return setError("Job type is required");
     }
 
@@ -73,29 +74,36 @@ function JobPostPage() {
         },
         body: JSON.stringify({
           title,
-          companyName,
+          company,
           location,
           salary: Number(salary),
-          jobType,
+          type,
           description,
           qualifications,
         }),
       });
 
-      await res.json();
+      const json = await res.json();
+
+      if (res.status !== 201) {
+        throw new Error(json.error);
+      }
+
+      toast.success("Job added successfully");
 
       setFormData({
         title: "",
-        companyName: "",
+        company: "",
         location: "",
         salary: "",
-        jobType: "",
+        type: "",
         description: "",
         qualifications: "",
       });
 
-      navigate("/");
+      navigate(`/jobs/${json.job.id}`);
     } catch (error) {
+      toast.error(error.message || "Failed to create job");
       setError(error.message || "Failed to create job");
     } finally {
       setLoading(false);
@@ -119,6 +127,7 @@ function JobPostPage() {
                 type="text"
                 name="title"
                 className="form-control"
+                placeholder="Enter the job title"
                 value={formData.title}
                 onChange={handleChange}
               />
@@ -131,9 +140,10 @@ function JobPostPage() {
               <span className="text-danger fw-semibold">*</span>
               <input
                 type="text"
-                name="companyName"
+                name="company"
                 className="form-control"
-                value={formData.companyName}
+                placeholder="Enter the company name"
+                value={formData.company}
                 onChange={handleChange}
               />
             </div>
@@ -146,6 +156,7 @@ function JobPostPage() {
               <input
                 type="text"
                 name="location"
+                placeholder="Enter the job location"
                 className="form-control"
                 value={formData.location}
                 onChange={handleChange}
@@ -161,6 +172,7 @@ function JobPostPage() {
                 type="number"
                 min="1"
                 name="salary"
+                placeholder="Enter the job salary"
                 className="form-control"
                 value={formData.salary}
                 onChange={handleChange}
@@ -173,10 +185,9 @@ function JobPostPage() {
               </label>
               <span className="text-danger fw-semibold">*</span>
               <select
-                name="jobType"
-                id=""
+                name="type"
                 className="form-select"
-                value={formData.jobType}
+                value={formData.type}
                 onChange={handleChange}
               >
                 <option value="">--select job type--</option>
@@ -194,6 +205,7 @@ function JobPostPage() {
               <input
                 type="text"
                 name="description"
+                placeholder="Enter the job description"
                 className="form-control"
                 value={formData.description}
                 onChange={handleChange}
@@ -208,6 +220,7 @@ function JobPostPage() {
               <input
                 type="text"
                 name="qualifications"
+                placeholder="Enter the job qualifications"
                 className="form-control"
                 value={formData.qualifications}
                 onChange={handleChange}

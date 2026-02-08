@@ -1,28 +1,18 @@
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import useJobContext from "../contexts/JobContext";
-import { useEffect } from "react";
 
-function HomaPage() {
-  const { jobs, loading, error, deleting, fetchJobs, deleteJob } =
-    useJobContext();
+function SearchPage() {
+  const { jobs, loading, error } = useJobContext();
 
   const navigate = useNavigate();
-
-  const handleDelete = async (id) => {
-    await deleteJob(id);
-  };
-
-  useEffect(() => {
-    fetchJobs();
-  }, []);
 
   return (
     <>
       <Navbar />
       <main className="min-vh-100 py-4 bg-light">
         <div className="container bg-light">
-          <h2 className="mb-4">All jobs</h2>
+          <h2 className="mb-4">Search results</h2>
 
           {loading && (
             <div className="py-5 text-center">
@@ -67,13 +57,6 @@ function HomaPage() {
                             >
                               See Details
                             </button>
-                            <button
-                              className="btn btn-danger"
-                              onClick={() => handleDelete(job.id)}
-                              disabled={deleting}
-                            >
-                              {deleting ? "Deleting" : "Delete"}
-                            </button>
                           </div>
                         </div>
                       </div>
@@ -93,4 +76,4 @@ function HomaPage() {
   );
 }
 
-export default HomaPage;
+export default SearchPage;
