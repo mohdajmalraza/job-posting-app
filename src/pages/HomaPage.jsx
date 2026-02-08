@@ -72,7 +72,7 @@ function HomaPage() {
                               onClick={() => handleDelete(job.id)}
                               disabled={deleting}
                             >
-                              {deleting ? "Deleting" : "Delete"}
+                              Delete
                             </button>
                           </div>
                         </div>
